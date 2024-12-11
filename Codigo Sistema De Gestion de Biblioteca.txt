@@ -1,0 +1,184 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+//Primera Parte: Creación de Registro de libros, identificaciones de ID de libro.
+//Registro de Libro Biblioteca 
+class Libro {
+    private String titulo;
+    private String autor;
+    private String genero;
+    private int idLibro;
+
+    public Libro(String titulo, String autor, String genero, int idLibro) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.genero = genero;
+        this.idLibro = idLibro;
+    }
+
+    public String obtenerInformacion() {
+        return "ID: " + idLibro + ", Título: " + titulo + ", Autor: " + autor + ", Género: " + genero;
+    }
+
+    public int getIdLibro() {
+        return idLibro;
+    }
+}
+
+//Fin primera parte 
+
+
+//Segunda Parte: Creación para registro de Usuario para la biblioteca, idenricación para correo institucional
+//Registro de Usuarios Biblioteca
+class Usuario {
+    private String nombre;
+    private String correo;
+    private int idUsuario;
+
+    public Usuario(String nombre, String correo, int idUsuario) {
+        this.nombre = nombre;
+        this.correo = correo;
+        this.idUsuario = idUsuario;
+    }
+
+    public String informacionDeLosUsuarios() {
+        return "ID: " + idUsuario + ", Nombre: " + nombre + ", Correo: " + correo;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+}
+
+
+//Tercera Parte: Préstamo dentro del Usuario, prestación de libros con fechas para devolución
+//Verificaciones de Préstamo
+class Prestamo {
+    private int idPrestamo;
+    private Libro libro;
+    private Usuario usuario;
+    private String fechaPrestamo;
+    private String fechaDevolucion;
+    private String estado;
+
+    public Prestamo(int idPrestamo, Libro libro, Usuario usuario, String fechaPrestamo) {
+        this.idPrestamo = idPrestamo;
+        this.libro = libro;
+        this.usuario = usuario;
+        this.fechaPrestamo = fechaPrestamo;
+        this.estado = "Activo"; // Estado inicial del préstamo
+    }
+
+    //Método Préstamo Bibloteca
+    public void cambioDeEstado(String nuevoEstado) {
+        this.estado = nuevoEstado;
+    }
+
+    public String obtenerInformacion() {
+        return "ID Préstamo: " + idPrestamo + ", Libro: " + libro.obtenerInformacion() +
+                ", Usuario: " + usuario.informacionDeLosUsuarios() +
+                ", Fecha Préstamo: " + fechaPrestamo +
+                ", Fecha Devolución: " + (fechaDevolucion != null ? fechaDevolucion : "Pendiente") +
+                ", Estado: " + estado;
+    }
+
+    public void setFechaDevolucion(String fechaDevolucion) {
+        this.fechaDevolucion = fechaDevolucion;
+    }
+}
+
+
+//Cuarta Parte: Proceso de Adquisición de libros dentro de la biblioteca
+class SistemaDeGestionDeBiblioteca {
+    private List<Libro> catalogo;
+    private List<Usuario> usuarios;
+    private List<Prestamo> prestamos;
+    private int idPrestamoCounter = 1;
+
+    public SistemaDeGestionDeBiblioteca() {
+        this.catalogo = new ArrayList<>();
+        this.usuarios = new ArrayList<>();
+        this.prestamos = new ArrayList<>();
+    }
+
+    // Métodos para gestionar libros
+    public void agregarLibro(String titulo, String autor, String genero, int idLibro) {
+        catalogo.add(new Libro(titulo, autor, genero, idLibro));
+    }
+
+    public void mostrarCatalogo() {
+        System.out.println("Catálogo de Libros:");
+        for (Libro libro : catalogo) {
+            System.out.println(libro.obtenerInformacion());
+        }
+    }
+
+    // Métodos para gestionar usuarios
+    public void registrarUsuario(String nombre, String correo, int idUsuario) {
+        usuarios.add(new Usuario(nombre, correo, idUsuario));
+    }
+
+    public void mostrarUsuarios() {
+        System.out.println("Usuarios Registrados:");
+        for (Usuario usuario : usuarios) {
+            System.out.println(usuario.informacionDeLosUsuarios());
+        }
+    }
+
+    // Métodos para gestionar préstamos
+    public void registrarPrestamo(int idLibro, int idUsuario, String fechaPrestamo) {
+        Libro libro = catalogo.stream().filter(l -> l.getIdLibro() == idLibro).findFirst().orElse(null);
+        Usuario usuario = usuarios.stream().filter(u -> u.getIdUsuario() == idUsuario).findFirst().orElse(null);
+
+        if (libro == null || usuario == null) {
+            System.out.println("Libro o usuario no encontrado.");
+            return;
+        }
+
+        Prestamo prestamo = new Prestamo(idPrestamoCounter++, libro, usuario, fechaPrestamo);
+        prestamos.add(prestamo);
+        System.out.println("Préstamo registrado exitosamente.");
+    }
+
+    public void mostrarPrestamos() {
+        System.out.println("Préstamos:");
+        for (Prestamo prestamo : prestamos) {
+            System.out.println(prestamo.obtenerInformacion());
+        }
+    }
+}
+
+
+//Ultima Parte: Registro Final dentro de Main, representación dentro de la galeria final
+public class Main {
+    public static void main(String[] args) {
+        SistemaDeGestionDeBiblioteca sistema = new SistemaDeGestionDeBiblioteca();
+
+        // Registrar libros Resultados
+        sistema.agregarLibro("El Principito", "Antoine de Saint-Exupéry", "Infantil", 1);
+        sistema.agregarLibro("Don Quijote de la Mancha", " Miguel de Cervante", "Clásico", 2);
+
+        // Registrar usuarios Resultados 
+        sistema.registrarUsuario("Milton", "mjyuxi@espe.edu.ec", 1);
+        sistema.registrarUsuario("Dahik", "cdvillalba2@espe.edu.ec", 2);
+        sistema.registrarUsuario("Brittany", "bnloor@espe.edu.ec", 3);
+        sistema.registrarUsuario("Daniel", "daquilca@espe.edu.ec", 4);
+
+        // Mostrar catálogo y usuarios Resultados
+        System.out.println("\nCatálogo:");
+        sistema.mostrarCatalogo();
+
+        System.out.println("\nUsuarios:");
+        sistema.mostrarUsuarios();
+
+        // Registrar préstamos Resultados
+        sistema.registrarPrestamo(1, 1, "2024-12-08");
+        sistema.registrarPrestamo(2, 2, "2024-12-09");
+
+        // Mostrar préstamos Resultados
+        System.out.println("\nPréstamos:");
+        sistema.mostrarPrestamos();
+    }
+}
